@@ -1,0 +1,53 @@
+  * Local DNS Master
+
+    dnrd can work as a DNS master server, using the contents of the
+    @DNRD_ROOT@/master file.  This is useful for small LAN, where
+    only a few hosts need name resolution.   The master server function
+    can be turned off with the `--master=off' command line switch.
+    The master file may contain the following directives:
+    
+    	domain <domain> [<dns> ...] [+auth]
+
+		sets the default domain for the following records to
+		<domain>.  If <domain> is followed by additional names
+		a NS record is stored for each <dns>. If the optional
+		+auth keyword is found dnrd will reply with
+		authoritative responses for any lookup under <domain>.
+		(This can include an authoritative Host Not Found.)
+
+    	<ipunmber> <name> [...]
+
+		creates A and PTR records for each <name>.  If <name>
+		does not contain a `.' the current default domain is
+		appended.  For names that have a `.' but should have
+		the default domain appended the last character must
+		be a `+'.
+
+
+	hosts <filename> [<domain>]
+
+		create records (type A and PTR) from the contents of
+		the file <filename>.  <filename> must have the same
+		format as /etc/hosts.
+		
+      Domain Authority
+      dnrd will automatically take the domain authority for the
+      in-addr.arpa domains with at least one defined host.
+
+      For example, if you define
+
+		192.168.1.1	dns.quietsche-entchen.de
+
+      dnrd will answer as if it is authorative for PTR lookups in the
+      domain 1.168.192.in-addr.arpa (reverse lookups).  This keeps
+      clients with more than one name server in /etc/resolv.conf from
+      asking other servers if dnrd can't resolve the request.
+
+      Localhost
+      Furthermore dnrd always adds forward and reverse mapping for
+      the localhost with the IP number 127.0.0.1, so
+
+		nslookup - 127.0.0.1
+
+      will always work on the dnrd server machine.
+      

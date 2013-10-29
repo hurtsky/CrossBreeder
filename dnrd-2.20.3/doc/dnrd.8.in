@@ -1,0 +1,313 @@
+.TH "DNRD" "8" "Domain Name Relay Daemon" "DNRD v2.20" "Domain Name Relay Daemon"
+.SH "NAME"
+dnrd \- proxy name server
+.SH "SYNOPSIS"
+.hy 0
+.na
+.TP 
+.B dnrd
+.RB [ \-a \ \fIlocaladdress\fR\ | \ \-\-address=\fIlocaladdress\fR] 
+.RB [ \-b \ \fR| \ \-\-load\-balance\fR]
+.RB [ \-B \ \fIBLACKLIST\fR\ | \ \-\-blacklist=\fIBLACKLIST\fR] 
+.RB [ \-c \ \fR(\fIoff\fR|[\fIlow:\fR]\fIhigh\fR)\ | \ \-\-cache=\fR(\fIoff\fR|[\fIlow:\fR]\fIhigh \fR)]
+.RB [ \-d \ \fILEVEL\ \fR| \ \-\-debug=\fILEVEL\fR]
+.RB [ \-h \ \fR| \ \-\-help \fR]
+.RB [ \-i \ \fR| \ \-\-ignore \fR]
+.RB [ \-k \ \fR| \ \-\-kill \fR]
+.RB [ \-l \ \fR| \ \-\-log \fR]
+.RB [ \-m \ \fR(\fIoff\fR|\fIFILE\fR)\ | \ \-\-master=\fR(\fIoff\fR|\fIFILE\fR)] 
+.RB [ \-M \ \fIN\fR\ | \ \-\-max\-sock=\fIN\fR]
+.RB [ \-r \ \fIN\fR\ | \ \-\-retry=\fIN\fR]
+.RB [ \-R \ \fIDIR\fR\ | \ \-\-dnrd\-root=\fIDIR\fR]
+.RB [ \-s \ \fIipaddr\fR(\fI:domain\fR)\ | \ \-\-server=\fIipaddr\fR(\fI:domain\fR)]
+.RB [ \-S \ \fIN\fR[\fI+\fR]\ | \ \-\-stats=\fIN\fR[\fI+\fR]]
+.RB [ \-t \ \fIN\fR\ | \ \-\-timeout=\fIN\fR]
+.RB [ \-u \ \fIuserid\fR\ | \ \-\-uid=\fIuserid\fR] 
+.RB [ \-v \ \fR| \ \-\-version \fR]
+.SH "DESCRIPTION"
+.B dnrd\fR is a proxying nameserver. It forwards DNS queries to the appropriate
+nameserver, but can also act as the primary nameserver for a subnet
+behind a firewall.  Proxying is configured on the command line using
+the
+.B \-s
+option.  By default, dnrd will act as the primary nameserver for hosts
+found in
+.I @DNRD_ROOT@/master\fR
+and queries to hostnames listed in
+.I @DNRD_ROOT@/blacklist \fR
+will be answered with a "host not found".
+
+.SH "OPTIONS"
+.TP 
+.B \-a
+.TP 
+.B \-\-address
+Bind only to the interface with the specified address. By default
+.B dnrd\fR binds to everything.
+
+.TP 
+.B \-b
+.TP 
+.B \-\-load\-balance
+Turn on load balancing. All forward servers (specified with
+.B \-s\fR) after this option will load balance in a round robin scheme. By default,
+.B dnrd\fR will use the next server in the list if the first times out. As soon
+as the first is reactivated, it will be used again. With
+.B \-b
+option, dnrd will use next active server as soon a request is
+served. If a server times out it will be deactivated and will not be
+used until it comes back. As soon it is reactivated it will join the
+list.
+.sp
+Note that if there are no servers specified with
+.B \-s
+after the
+.B \-b\fR, this will do nothing at all.
+
+.TP
+.B \-B \fIBLACKLIST
+.TP
+.B \-\-blacklist=\fIBLACKLIST
+Blacklist all hostnames listed in the file BLACKLIST. Queries to hosts listed
+in this file will be answered with "host not found". The file BLACKLIST is
+specified relative to the DNRD chroot directory (defaults to @DNRD_ROOT@). By 
+default dnrd will look for a file named "blacklist".
+
+.TP 
+.BR \-c \ ( \fIoff |[ \fIlow: ] \fIhigh )
+.TP 
+.BR \-\-cache= ( \fIoff |[ \fIlow: ] \fIhigh )
+This option can be used to either turn
+.I off\fR caching of DNS responses, or to change the
+.I high \fRand \fIlow\fR watermarks. With the
+.I high\fR/\fIlow
+water mark option, cached entries are purged when the number of
+responses reaches the
+.I high\fR\-water
+mark, and they will be purged until the number of cached responses
+reaches the
+.I low\fR\-water
+mark, purging the oldest first. By default, caching is on, with
+.I low
+and
+.I high
+water\-marks of 800 and 1000 respectively.
+
+.TP 
+.B \-d \fILEVEL
+.TP 
+.B \-\-debug=\fILEVEL
+This turns on debugging level
+.I LEVEL\fR.
+The
+.B dnrd 
+process will not fork into the background and print out debugging
+information in the current console. Supported debug levels are 1-4
+The higher level, the more debug info is printed.
+.sp
+The
+.B \-l
+option can be used to force dnrd to run in the background and log
+debug info to syslog.
+.sp
+Sending signal SIGUSR1 will toggle the debug level between level
+0 (no debugging) and level 3.
+
+.TP 
+.B \-h
+.TP 
+.B \-\-help
+Prints usage information
+
+.TP 
+.B \-i
+.TP 
+.B \-\-ignore
+Ignore cache for deactivated servers. If a forward DNS server times
+out and gets deactivated, all cache entries for this server are
+ignored. This helps avoid network timeout delays when
+.B dnrd
+serves a offline/dialup network.
+
+.TP 
+.B \-k
+.TP 
+.B \-\-kill
+Kills the currently running
+.B dnrd
+process.
+
+.TP 
+.B \-l
+.TP 
+.B \-\-log
+Send all messages to syslog.
+.B dnrd
+uses the deamon facility. If used with the
+.B \-d
+flag, this option will cause
+.B dnrd
+to fork and run in the background, logging all debugging messages to
+syslog.
+
+.TP 
+.BR \-m \ ( \fIoff | \fIFILE )
+.TP 
+.BR \-\-master= ( \fIoff | \fIFILE )
+.B dnrd
+can act as the primary name server for a number of hosts. By default,
+it will read in
+.I @DNRD_ROOT@/master
+to determine how this is done.
+This option specifies another file than @DNRD_ROOT@/master or turns off 
+all primary server functionality.
+Sending 
+.B dnrd
+signal -HUP will make dnrd try to re-read the master file unless this is
+option is set to "off". Therefore, the master file have to be within the
+dnrd-root. the file is specified relative to dnrd-root.
+
+
+.TP 
+.BI \-M\  N
+.TP 
+.BI \-\-max\-sock= N
+Set the maximum allowed open sockets. Default is \fI200\fR.
+
+
+.TP 
+.BI \-r\  N
+.TP 
+.BI \-\-retry= N
+Set the retry interval time. When a forward DNS server times out it is
+deactivated. (use the
+.B \-t
+option to set the timeout value)
+.B dnrd
+will try to send a request for localhost every
+.I N
+seconds. As soon there are a respose from a deactivated server, it is
+reactivated. The default value is
+.I 10
+seconds. Setting this to zero will make
+.B dnrd
+to never deactivate a server.
+
+
+.TP
+.B \-R \fIDIR
+.TP
+.B \-\-dnrd\-root=\fIDIR
+Set the dnrd-root to
+.I DIR\fR.
+.B dnrd
+will chroot to this directory at startup so all files, masterfile and
+blacklist, must be here. This option overrides the environment variable 
+DNRD_ROOT. Default dnrd-root is 
+.I @DNRD_ROOT@\fR.
+
+
+.TP 
+.BI \-s\  ipaddr \fR( :domain \fR)
+.TP 
+.BI \-\-server= ipaddr \fR( :domain \fR)
+Add a forward DNS server. If
+.B \-s
+is used multiple times, the first is the primary DNS server and the rest are
+backup servers.  If the primary DNS server times out, it is deactivated and
+the next specified server (that is active) is used until the previous
+gets reactivated.
+.sp
+The
+.I domain
+option allows dnrd to determine which DNS server should get the query
+based on the domain name in the query. This is useful when you have an
+internet connection and a vpn connection to work, for
+instance. Several servers with the same
+.I domain
+might be specified and then will they work as backup servers.
+.sp
+If the
+.B \-b
+option is specified, then all servers specified after the
+.B \-b
+option are load balanced per
+.I domain\fR.
+
+
+.TP
+.BI \-S\  N\fR[\fI+\fR]
+.TP
+.BI \-\-stats= N\fR[\fI+\fR]
+Print statistics about cache hits, cache misses and timeouts to syslog every
+.I N
+seconds.
+If 
+.I +
+is specified, the counters will not be reset after the print.
+
+.TP 
+.BI \-t\  N
+.TP 
+.BI \-\-timeout= N
+Set the timeout value for forward DNS servers. If a server don't
+respond to a query within
+.I N
+seconds it is deactivated. The default value is
+.I 12
+.
+.sp
+Setting this to zero will make
+.B dnrd
+to never deactivate a server because of timeouts. However, a server
+might be deactivated if sendto fails.
+
+
+.TP 
+.BI \-u\  userid
+.TP 
+.BI \-\-userid= userid
+Set the UID that
+.B dnrd
+will run as. By default,
+.B dnrd
+tries to switches to uid
+.I dnrd
+after starting up.
+
+
+.TP 
+.B \-v
+.TP 
+.B \-\-version
+Prints out the version number.
+
+.SH "BUGS"
+.PP 
+The TTL's are not respected for the cache.
+
+.SH "FILES"
+.PP 
+.B @DNRD_ROOT@/master
+.PP 
+This file is used to configure
+.B dnrd
+as a primary nameserver.
+.PP 
+.B @DNRD_ROOT@/blacklist
+.PP 
+Hosts listed in this file are blacklisted.
+.PP 
+.B /var/run/dnrd.pid
+.PP 
+The currently\-running
+.B dnrd
+process' pid is placed into this file. It is needed to allow new dnrd
+processes to find and kill the currently running process.
+
+.SH "AUTHOR"
+.PP 
+The original version of dnrd was written by Brad Garcia
+.BR garsh@home\&.com .
+Other contributors are listed in the HISTORY file included with the
+source code.

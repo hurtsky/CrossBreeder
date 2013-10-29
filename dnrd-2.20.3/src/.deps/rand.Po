@@ -1,0 +1,58 @@
+rand.o: rand.c standard.h /data/local/gcc/include/stdio.h \
+ /data/local/gcc/include/sys/cdefs.h \
+ /data/local/gcc/include/sys/cdefs_elf.h \
+ /data/local/gcc/include/sys/_types.h \
+ /data/local/gcc/include/machine/_types.h \
+ /data/local/gcc/lib/gcc/arm-elf-linux-androideabi/4.6.0/include/stdarg.h \
+ /data/local/gcc/lib/gcc/arm-elf-linux-androideabi/4.6.0/include/stddef.h \
+ /data/local/gcc/include/sys/types.h \
+ /data/local/gcc/lib/gcc/arm-elf-linux-androideabi/4.6.0/include/stdint.h \
+ /data/local/gcc/include/stdint.h \
+ /data/local/gcc/include/linux/posix_types.h \
+ /data/local/gcc/include/linux/stddef.h \
+ /data/local/gcc/include/linux/compiler.h \
+ /data/local/gcc/include/asm/posix_types.h \
+ /data/local/gcc/include/asm/types.h \
+ /data/local/gcc/include/linux/types.h \
+ /data/local/gcc/include/machine/kernel.h \
+ /data/local/gcc/include/sys/sysmacros.h rand.h
+
+standard.h:
+
+/data/local/gcc/include/stdio.h:
+
+/data/local/gcc/include/sys/cdefs.h:
+
+/data/local/gcc/include/sys/cdefs_elf.h:
+
+/data/local/gcc/include/sys/_types.h:
+
+/data/local/gcc/include/machine/_types.h:
+
+/data/local/gcc/lib/gcc/arm-elf-linux-androideabi/4.6.0/include/stdarg.h:
+
+/data/local/gcc/lib/gcc/arm-elf-linux-androideabi/4.6.0/include/stddef.h:
+
+/data/local/gcc/include/sys/types.h:
+
+/data/local/gcc/lib/gcc/arm-elf-linux-androideabi/4.6.0/include/stdint.h:
+
+/data/local/gcc/include/stdint.h:
+
+/data/local/gcc/include/linux/posix_types.h:
+
+/data/local/gcc/include/linux/stddef.h:
+
+/data/local/gcc/include/linux/compiler.h:
+
+/data/local/gcc/include/asm/posix_types.h:
+
+/data/local/gcc/include/asm/types.h:
+
+/data/local/gcc/include/linux/types.h:
+
+/data/local/gcc/include/machine/kernel.h:
+
+/data/local/gcc/include/sys/sysmacros.h:
+
+rand.h:

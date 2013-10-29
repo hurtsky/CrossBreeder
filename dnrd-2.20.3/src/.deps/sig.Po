@@ -1,0 +1,157 @@
+sig.o: sig.c sig.h /data/local/gcc/include/signal.h \
+ /data/local/gcc/include/sys/cdefs.h \
+ /data/local/gcc/include/sys/cdefs_elf.h /data/local/gcc/include/limits.h \
+ /data/local/gcc/include/sys/limits.h \
+ /data/local/gcc/include/linux/limits.h \
+ /data/local/gcc/include/machine/internal_types.h \
+ /data/local/gcc/include/machine/limits.h \
+ /data/local/gcc/include/sys/syslimits.h /data/local/gcc/include/string.h \
+ /data/local/gcc/lib/gcc/arm-elf-linux-androideabi/4.6.0/include/stddef.h \
+ /data/local/gcc/include/malloc.h /data/local/gcc/include/sys/types.h \
+ /data/local/gcc/lib/gcc/arm-elf-linux-androideabi/4.6.0/include/stdint.h \
+ /data/local/gcc/include/stdint.h /data/local/gcc/include/sys/_types.h \
+ /data/local/gcc/include/machine/_types.h \
+ /data/local/gcc/include/linux/posix_types.h \
+ /data/local/gcc/include/linux/stddef.h \
+ /data/local/gcc/include/linux/compiler.h \
+ /data/local/gcc/include/asm/posix_types.h \
+ /data/local/gcc/include/asm/types.h \
+ /data/local/gcc/include/linux/types.h \
+ /data/local/gcc/include/machine/kernel.h \
+ /data/local/gcc/include/sys/sysmacros.h \
+ /data/local/gcc/include/asm/signal.h \
+ /data/local/gcc/include/asm-generic/signal.h \
+ /data/local/gcc/include/asm/siginfo.h \
+ /data/local/gcc/include/asm-generic/siginfo.h common.h config.h \
+ /data/local/gcc/include/sys/socket.h \
+ /data/local/gcc/include/linux/socket.h \
+ /data/local/gcc/include/asm/socket.h \
+ /data/local/gcc/include/asm/sockios.h \
+ /data/local/gcc/include/linux/sockios.h \
+ /data/local/gcc/include/linux/uio.h /data/local/gcc/include/sys/select.h \
+ /data/local/gcc/include/sys/time.h /data/local/gcc/include/linux/time.h \
+ /data/local/gcc/include/netinet/in.h /data/local/gcc/include/endian.h \
+ /data/local/gcc/include/sys/endian.h /data/local/gcc/include/linux/in.h \
+ /data/local/gcc/include/asm/byteorder.h \
+ /data/local/gcc/include/linux/byteorder/little_endian.h \
+ /data/local/gcc/include/linux/byteorder/swab.h \
+ /data/local/gcc/include/linux/byteorder/generic.h \
+ /data/local/gcc/include/linux/in6.h \
+ /data/local/gcc/include/netinet/in6.h /data/local/gcc/include/syslog.h \
+ /data/local/gcc/include/stdio.h \
+ /data/local/gcc/lib/gcc/arm-elf-linux-androideabi/4.6.0/include/stdarg.h \
+ /data/local/gcc/include/semaphore.h domnode.h srvnode.h
+
+sig.h:
+
+/data/local/gcc/include/signal.h:
+
+/data/local/gcc/include/sys/cdefs.h:
+
+/data/local/gcc/include/sys/cdefs_elf.h:
+
+/data/local/gcc/include/limits.h:
+
+/data/local/gcc/include/sys/limits.h:
+
+/data/local/gcc/include/linux/limits.h:
+
+/data/local/gcc/include/machine/internal_types.h:
+
+/data/local/gcc/include/machine/limits.h:
+
+/data/local/gcc/include/sys/syslimits.h:
+
+/data/local/gcc/include/string.h:
+
+/data/local/gcc/lib/gcc/arm-elf-linux-androideabi/4.6.0/include/stddef.h:
+
+/data/local/gcc/include/malloc.h:
+
+/data/local/gcc/include/sys/types.h:
+
+/data/local/gcc/lib/gcc/arm-elf-linux-androideabi/4.6.0/include/stdint.h:
+
+/data/local/gcc/include/stdint.h:
+
+/data/local/gcc/include/sys/_types.h:
+
+/data/local/gcc/include/machine/_types.h:
+
+/data/local/gcc/include/linux/posix_types.h:
+
+/data/local/gcc/include/linux/stddef.h:
+
+/data/local/gcc/include/linux/compiler.h:
+
+/data/local/gcc/include/asm/posix_types.h:
+
+/data/local/gcc/include/asm/types.h:
+
+/data/local/gcc/include/linux/types.h:
+
+/data/local/gcc/include/machine/kernel.h:
+
+/data/local/gcc/include/sys/sysmacros.h:
+
+/data/local/gcc/include/asm/signal.h:
+
+/data/local/gcc/include/asm-generic/signal.h:
+
+/data/local/gcc/include/asm/siginfo.h:
+
+/data/local/gcc/include/asm-generic/siginfo.h:
+
+common.h:
+
+config.h:
+
+/data/local/gcc/include/sys/socket.h:
+
+/data/local/gcc/include/linux/socket.h:
+
+/data/local/gcc/include/asm/socket.h:
+
+/data/local/gcc/include/asm/sockios.h:
+
+/data/local/gcc/include/linux/sockios.h:
+
+/data/local/gcc/include/linux/uio.h:
+
+/data/local/gcc/include/sys/select.h:
+
+/data/local/gcc/include/sys/time.h:
+
+/data/local/gcc/include/linux/time.h:
+
+/data/local/gcc/include/netinet/in.h:
+
+/data/local/gcc/include/endian.h:
+
+/data/local/gcc/include/sys/endian.h:
+
+/data/local/gcc/include/linux/in.h:
+
+/data/local/gcc/include/asm/byteorder.h:
+
+/data/local/gcc/include/linux/byteorder/little_endian.h:
+
+/data/local/gcc/include/linux/byteorder/swab.h:
+
+/data/local/gcc/include/linux/byteorder/generic.h:
+
+/data/local/gcc/include/linux/in6.h:
+
+/data/local/gcc/include/netinet/in6.h:
+
+/data/local/gcc/include/syslog.h:
+
+/data/local/gcc/include/stdio.h:
+
+/data/local/gcc/lib/gcc/arm-elf-linux-androideabi/4.6.0/include/stdarg.h:
+
+/data/local/gcc/include/semaphore.h:
+
+domnode.h:
+
+srvnode.h:

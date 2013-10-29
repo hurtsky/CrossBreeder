@@ -1,0 +1,147 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include <getopt.h>
+#include <string.h>
+#include <stdarg.h>
+#include <signal.h>
+#include <fcntl.h>
+#include <sys/time.h>
+#include <sys/stat.h> /* idcrisis */
+
+#include <unistd.h>
+#include <syslog.h>
+#include <sys/ioctl.h>
+#include <asm/types.h>
+#include <linux/random.h>
+
+#include <errno.h>
+
+#include <sys/system_properties.h>
+
+void sig_handler(int signo) { 
+
+for(int i=0; i<=15; i++) {
+if (signo == i) 
+  printf("received %d\n",i); 
+}
+}
+
+int main(int argc, char *argv[]) {
+
+sigset_t mask; 
+sigfillset(&mask); 
+sigprocmask(SIG_SETMASK, &mask, NULL);
+
+struct flock fl = {F_WRLCK, SEEK_SET,   0,      0,     0 };
+fl.l_pid = getpid();
+
+int pid_file = open("/dev/CHECK_NET_DNS.RUN", O_CREAT | O_RDWR, 0644);
+
+int rc = fcntl(pid_file, F_SETLK, &fl);
+if ( rc == -1 ) {
+      printf("Couldn't lock PID file \"/dev/CHECK_NET_DNS.RUN\" for writing.\n");
+    return 1;
+}
+
+//char pid[8];
+char buf[1024],command[1024];
+//sprintf(pid,"%i",getpid());
+//write(pid_file, pid, strlen(pid));
+
+if ( ! readlink("/proc/self/exe", buf, sizeof(buf)-1)) 
+{
+  sprintf(buf,"/system/etc/CrossBreeder/CB_WakeWait");
+}
+char *index=strrchr(buf,'/');
+if ( index != NULL ) index[0]=0;
+
+//for(int i=0; i<=15; i++) {
+//if (signal(i, SIG_IGN) == SIG_ERR)
+//  printf("\ncan't catch %d\n",i); 
+//}
+
+int sleep_fd = -1 ; int len = -1;
+char sleep_read_buffer;
+FILE *fp; char path[1035];
+int repeat; repeat=5;
+int count; count=0;
+int startup; startup=0;
+for (;;) {
+repeat=5;
+
+int iReturn = __system_property_get("net.dns1",path);
+//  sprintf(command,"echo __system_property_get net.dns1 path=%s >> /dev/zzCrossBreeder.log",path);
+//  system(command);
+if ( ! iReturn ) {
+  fp = popen("getprop net.dns1 2>/dev/null", "r"); 
+  fgets(path, sizeof(path)-1, fp);
+  pclose(fp);
+  repeat=10;
+}
+
+//  sprintf(command,"echo net.dns1 path now : path=%s >> /dev/zzCrossBreeder.log",path);
+//  system(command);
+
+if ( strncmp(path,"0.0.0.0",7) != 0 ) { 
+//  sprintf(command,"echo CB_WakeWait set 0.0.0.0 started with path=%s >> /dev/zzCrossBreeder.log",path);
+//  system(command);
+  sprintf(command,"%s/timeout -s KILL 60 %s/zzCHECK_NET_DNS",buf,buf);
+  system(command);
+}
+
+sleep(repeat); 
+count+=repeat;
+
+//  sprintf(command,"echo CB_WakeWait about to check with startup=%d and count=%d >> /dev/zzCrossBreeder.log",startup,count);
+//  system(command);
+
+if ( startup != 1 ) {
+
+//  sprintf(command,"echo CB_WakeWait startup started with count=%d >> /dev/zzCrossBreeder.log",count);
+//  system(command);
+
+iReturn = __system_property_get("sys.boot_completed",path);
+//  sprintf(command,"echo __system_property_get sys.boot_completed path=%s >> /dev/zzCrossBreeder.log",path);
+//  system(command);
+
+if ( ! iReturn ) {
+  fp = popen("getprop sys.boot_completed 2>/dev/null", "r");
+  fgets(path, sizeof(path)-1, fp);
+  pclose(fp);
+}
+
+//  sprintf(command,"echo sys.boot_completed path=%s >> /dev/zzCrossBreeder.log",path);
+//  system(command);
+
+if ( ( ( strncmp(path,"1",1) == 0 ) && ( count > 120 ) ) || ( count > 240 ) ) {
+  startup = 1;
+//  sprintf(command,"echo CB_WakeWait FORCE started >> /dev/zzCrossBreeder.log");
+//  system(command);
+  sprintf(command,"%s/timeout -s KILL 120 %s/zzCrossBreeder FORCE &",buf,buf);
+  system(command);
+}
+
+}
+
+if ( count > 300 ) { 
+count=0;
+
+//sprintf(command,"%s/timeout -s KILL 60 %s/zzCHECK_NET_DNS RUN &",buf,buf);
+//system(command);
+
+/*
+sleep_fd = open ( "/sys/power/wait_for_fb_wake" , O_RDONLY, 0);
+        if (sleep_fd != -1 )
+        {
+         do {
+             len = read (sleep_fd, &sleep_read_buffer, 1);
+            } while ( len < 0 && errno == EINTR );
+        close(sleep_fd);
+        }
+*/
+}
+
+}
+
+return 0;
+}

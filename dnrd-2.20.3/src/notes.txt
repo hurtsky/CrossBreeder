@@ -1,0 +1,1 @@
+./dnrd -a 127.0.0.2 -u 0 -b -c 100:128 -s 8.8.8.8 -s 8.8.4.4 -s 208.67.222.222 -s 208.67.220.220 -R /system/etc/CrossBreeder/dnrd_root
